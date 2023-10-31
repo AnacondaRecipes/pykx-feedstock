@@ -7,7 +7,9 @@ package:
 
 source:
   git_url: https://github.com/KxSystems/pykx
-  git_rev: release/2.1
+  git_rev: release/{{ version }}
+  patches:
+    - 0001-Addition-of-missing-file.patch
 
 build:
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
