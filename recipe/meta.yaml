@@ -17,19 +17,20 @@ requirements:
   build:
     - {{ compiler('c') }}
   host:
-    - python >=3.7
-    - cython >=3.0.0,<3.1.dev0
-    - numpy >=1.22,<2.dev0,<1.23  # [py!=37]
-    - setuptools ==60.9.3
-    - setuptools-scm >=6.0.1,<6.1.dev0
+    - python
+    - cython 3.0.0
+    - numpy 1.22  # [py!=37]
+    - numpy 1.20  # [py==37]
+    - setuptools
+    - setuptools-scm 6.0.1
     - tomli >=2.0.1
-    - wheel >=0.36.2
+    - wheel
     - pip
   run:
-    - python >=3.7
+    - python
     - pandas >=1.2
     - pytz >=2022.1
-    - toml >=0.10.2,<0.11.dev0
+    - toml >=0.10.2,<0.11.0
     - {{ pin_compatible('numpy') }}
 
 test:
