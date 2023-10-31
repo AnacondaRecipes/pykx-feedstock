@@ -12,7 +12,12 @@ source:
     - 0001-Addition-of-missing-file.patch
 
 build:
-  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  script:
+    - mkdir $HOME/q  # [not win]
+    - mkdir %HOME%\q # [win]
+    - export QHOME=$HOME/q  # [not win]
+    - set QHOME=%HOME%\q    # [win]
+    - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   number: 0
 
 requirements:
