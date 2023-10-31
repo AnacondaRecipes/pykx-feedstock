@@ -1,5 +1,5 @@
 {% set name = "pykx" %}
-{% set version = "None" %}
+{% set version = "2.1" %}
 
 package:
   name: {{ name|lower }}
