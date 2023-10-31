@@ -1,0 +1,53 @@
+{% set name = "pykx" %}
+{% set version = "None" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/KxSystems/pykx
+  git_rev: release/2.1
+
+build:
+  script: {{ PYTHON }} -m pip install . -vv
+  number: 0
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+  host:
+    - python >=3.7
+    - cython >=3.0.0,<3.1.dev0
+    - numpy >=1.22,<2.dev0,<1.23  # [py!=37]
+    - setuptools ==60.9.3
+    - setuptools-scm >=6.0.1,<6.1.dev0
+    - tomli >=2.0.1
+    - wheel >=0.36.2
+    - pip
+  run:
+    - python >=3.7
+    - pandas >=1.2
+    - pytz >=2022.1
+    - toml >=0.10.2,<0.11.dev0
+    - {{ pin_compatible('numpy') }}
+
+test:
+  imports:
+    - pykx
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://code.kx.com/pykx
+  summary: An interface between Python and q
+  license: LGPL-3.0 AND Apache-2.0
+  license_file:
+    - LICENSE.txt
+    - src/pykx/license.py
+
+extra:
+  recipe-maintainers:
+    - boldorider4
