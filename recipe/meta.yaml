@@ -36,12 +36,16 @@ requirements:
     - {{ pin_compatible('numpy') }}
 
 test:
+  source_files:
+    - tests
   imports:
     - pykx
   commands:
     - pip check
+    - pytest tests
   requires:
     - pip
+    - pytest
 
 about:
   home: https://code.kx.com/pykx
