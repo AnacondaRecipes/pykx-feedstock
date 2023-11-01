@@ -42,14 +42,27 @@ requirements:
 test:
   source_files:
     - tests
-  imports:
-    - pykx
   commands:
+    - export QARGS="--unlicensed"     # [not win]
+    - set QARGS="--unlicensed"        # [win]
+    - python -c "import pykx"
     - pip check
-    - pytest tests
+    - mkdir $SRC_DIR/q                # [not win]
+    - mkdir %SRC_DIR%\q               # [win]
+    - QHOME=$SRC_DIR/q pytest tests   # [not win]
+    - set QHOME=%SRC_DIR%\q           # [win]
+    - pytest tests                    # [win]
   requires:
     - pip
+    - plotly
     - pytest
+    - pytest-asyncio
+    - pytest-benchmark
+    - pytest-monitor  # [not osx]
+    - pytest-randomly
+    - pytest-xdist
+    - psutil
+    - pytest-timeout
 
 about:
   home: https://code.kx.com/pykx
