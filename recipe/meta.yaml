@@ -49,9 +49,9 @@ test:
     - pip check
     - mkdir $SRC_DIR/q                # [not win]
     - mkdir %SRC_DIR%\q               # [win]
-    - QHOME=$SRC_DIR/q pytest tests   # [not win]
+    - export QHOME=$SRC_DIR/q         # [not win]
     - set QHOME=%SRC_DIR%\q           # [win]
-    - pytest tests                    # [win]
+    - pytest -m "not licensed" tests
   requires:
     - pip
     - plotly
@@ -59,7 +59,6 @@ test:
     - pytest-asyncio
     - pytest-benchmark
     - pytest-monitor  # [not osx]
-    - pytest-randomly
     - pytest-xdist
     - psutil
     - pytest-timeout
