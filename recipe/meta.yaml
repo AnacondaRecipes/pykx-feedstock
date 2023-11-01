@@ -39,6 +39,9 @@ requirements:
     - toml >=0.10.2,<0.11.0
     - {{ pin_compatible('numpy') }}
 
+# skip these tests because they require a valid license from kx
+{% set tests_to_skip = "test_licensed_success_file or test_licensed_success_b64" %}
+
 test:
   source_files:
     - tests
@@ -51,7 +54,7 @@ test:
     - mkdir %SRC_DIR%\q               # [win]
     - export QHOME=$SRC_DIR/q         # [not win]
     - set QHOME=%SRC_DIR%\q           # [win]
-    - pytest -m "not licensed" tests
+    - pytest -v -m "not licensed" -k "not ({{ tests_to_skip }})" tests
   requires:
     - pip
     - plotly
