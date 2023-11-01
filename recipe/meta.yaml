@@ -13,10 +13,9 @@ source:
 
 build:
   script:
-    - mkdir $HOME/q  # [not win]
-    - mkdir %HOME%\q # [win]
-    - export QHOME=$HOME/q  # [not win]
-    - set QHOME=%HOME%\q    # [win]
+    - rm -rv $SRC_DIR/src/pykx/lib/[l,w]64*   # [osx]
+    - rm -rv $SRC_DIR/src/pykx/lib/[m,w]64*   # [linux]
+    - del /s %SRC_DIR%/src/pykx/lib/l64 %SRC_DIR%/src/pykx/lib/l64arm %SRC_DIR%/src/pykx/lib/m64 %SRC_DIR%/src/pykx/lib/m64arm  # [win]
     - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   number: 0
 
