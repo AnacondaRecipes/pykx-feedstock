@@ -40,21 +40,25 @@ requirements:
     - {{ pin_compatible('numpy') }}
 
 # skip these tests because they require a valid license from kx
-{% set tests_to_skip = "test_licensed_success_file or test_licensed_success_b64" %}
+#{% set tests_to_skip = "test_licensed_success_file or test_licensed_success_b64" %}
 
 test:
   source_files:
     - tests
   commands:
-    - export QARGS="--unlicensed"     # [not win]
-    - set QARGS="--unlicensed"        # [win]
-    - python -c "import pykx"
+    #- export QARGS="--unlicensed" # [not win]
+    - set QARGS="--unlicensed"    # [win]
     - pip check
-    - mkdir $SRC_DIR/q                # [not win]
-    - mkdir %SRC_DIR%\q               # [win]
-    - export QHOME=$SRC_DIR/q         # [not win]
-    - set QHOME=%SRC_DIR%\q           # [win]
-    - pytest -v -m "not licensed" -k "not ({{ tests_to_skip }})" tests
+    - python -c "import pykx"
+    - mkdir q                     # [not win]
+    - mkdir q                     # [win]
+    - export QHOME=q              # [not win]
+    - set QHOME=q                 # [win]
+    - export QLIC=q               # [not win]
+    - set QLIC=q                  # [win]
+    - python -c "import base64, os; t = '<insert-license-here>'; t = t.encode('ascii'); decoded = base64.decodebytes(t); bf = open(os.path.join('q','kc.lic'), 'wb'); bf.write(decoded); bf.close()"
+    #- pytest -v -m "not licensed" -k "not ({{ tests_to_skip }})" tests
+    - pytest -v tests
   requires:
     - pip
     - plotly
