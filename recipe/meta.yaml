@@ -39,8 +39,10 @@ requirements:
     - toml >=0.10.2,<0.11.0
     - {{ pin_compatible('numpy') }}
 
-# skip these tests because they require a valid license from kx
-#{% set tests_to_skip = "test_licensed_success_file or test_licensed_success_b64" %}
+# skipping test version because regex in test is wrong
+{% set tests_to_skip = "test_version" %}
+# skipping test that fails because test does not expand relative path
+{% set tests_to_skip = tests_to_skip + " or test_check_license_no_qlic" %}
 
 test:
   source_files:
@@ -57,8 +59,7 @@ test:
     - export QLIC=q               # [not win]
     - set QLIC=q                  # [win]
     - python -c "import base64, os; t = '<insert-license-here>'; t = t.encode('ascii'); decoded = base64.decodebytes(t); bf = open(os.path.join('q','kc.lic'), 'wb'); bf.write(decoded); bf.close()"
-    #- pytest -v -m "not licensed" -k "not ({{ tests_to_skip }})" tests
-    - pytest -v tests
+    - pytest -v -k "not ({{ tests_to_skip }})" tests
   requires:
     - pip
     - plotly
@@ -67,6 +68,7 @@ test:
     - pytest-benchmark
     - pytest-monitor  # [not osx]
     - pytest-xdist
+    - pytest-randomly
     - psutil
     - pytest-timeout
 
