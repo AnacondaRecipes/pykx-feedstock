@@ -50,6 +50,26 @@ requirements:
 # skip test import from other dir, because QHOME variables need to be reset (probably a bug in kx, not a dramatic one)
 {% set tests_to_skip = tests_to_skip + " or test_import_from_other_dir" %}
 
+### tests to skip because of missing kdb+ distribution  ###
+# these tests should pass once kdb+ is downloaded from https://kx.com/kdb-personal-edition-download
+# the link allows the personal edition to be downloaded once the person's details are entered.
+# The files included in the download cannot be repacked in a conda package because for starters
+# the license file contained is personal and also because it would have to be pushed to a private anaconda channel
+# these tests have been however tested locally and they pass
+{% set tests_to_skip_test_toq = "test_from_callable or test_from_arrow_licensed" %}
+{% set tests_to_skip_test_util = "test_pickle_pykx_df_block_manager" %}
+{% set tests_to_skip_test_ctx = "test_dot_q_errors or test_paths or test_update_global_context or test_dir or test_iter or test_reserved_words or test_ctx_no_overwrite_qerror or test_fqn or test_update_context or test_repr or test_with_block_errors_over_ipc or test_expunge or test_del or test_dot_z or test_dot_z" %}
+{% set tests_to_skip_test_query = "test_upsert_match_schema or test_update or test_query_pa or test_delete or test_delete_async or test_update_async or test_insert_match_schema or test_select_async or test_exec_async or test_select or test_exec" %}
+{% set tests_to_skip_test_wrappers = "test_t_property or test_is_atom or test_hash or test_pickling or test_t_attr or test_call_unlicensed or test_symbolic_function" %}
+{% set tests_to_skip_test_system = "test_system_display_size_ipc or test_system_tables_ipc or test_system_precision_ipc or test_system_namespace_ipc or test_system_load_ipc or test_system_gc_mode_ipc or test_system_console_size_ipc or test_system_workspace_ipc or test_system_date_parsing_ipc or test_system_random_seed_ipc or test_system_functions_ipc or test_system_rename_ipc or test_system_week_offset_ipc or test_system_variables_ipc or test_system_utc_ipc or test_system_cd_ipc or test_num_threads" %}
+{% set tests_to_skip_test_console = "test_basic_usage or test_q_error or test_input_eof_empty or test_entering_blank_lines or test_input_eof_newlines or test_input_eof_assignment or test_switching_mode or test_k_mode" %}
+{% set tests_to_skip_test_q_future = "test_q_future_callbacks or test_q_future_errors or test_internal_await" %}
+{% set tests_to_skip_test_write = "test_read_write_splayed or test_read_write_serialized_async or test_read_write_serialized or test_write_json or test_write_splayed or test_read_write_splayed_async  or test_read_write_csv_async or test_read_write_json_async or test_write_serialized or test_read_write_csv or test_read_write_json or test_write_csv" %}
+{% set tests_to_skip_test_read = "test_read_csv or test_read_csv_with_type_guessing or test_read_json or test_read_fixed_async or test_read_serialized or test_read_fixed or test_read_splayed " %}
+{% set tests_to_skip_test_q = "test_import_from_other_dir or test_delitem or test_attributes or test_call_with_params or test_call_sync or test_setitem or test_getitem or test_dir or test_setattr" %}
+{% set tests_to_skip_test_ipc = "test_ipc_messaging_tcp_auth or test_async_deferred_calls or test_raw_await or test_memory_domain or test_ipc_messaging_tcp_compression_edge_case or test_no_pyfunc_over_ipc or test_raw_complex or test_tls_and_unix_error or test_ipc_messaging_unix or test_async_q_connection_clears_calls_on_close or test_raw_poll_send_recv_all or test_secure_q_con_callable or test_eventloop_gather_order or test_async_timeout or test_ipc_messaging_unix_auth or test_raw_poll_send_recv_one or test_async_q_connection or test_async_with_q_features or test_async_repr or test_no_pykx_namespace or test_async_helpful_error_for_closed_conn or test_max_error_length or test_no_wrap_over_ipc or test_uninitialized_connection or test_no_ctx_not_used or test_repr or test_raw_poll_send_recv_n or test_sync_helpful_error_for_closed_conn or test_ipc_messaging_tcp or test_timeout" %}
+{% set tests_to_skip_test_config = "test_QHOME" %}
+
 test:
   source_files:
     - tests
@@ -62,8 +82,28 @@ test:
     - set QHOME=q                 # [win]
     - export QLIC=q               # [not win]
     - set QLIC=q                  # [win]
+    # this is a workaround to get a kc.lic to be installed into the $QHOME directory. It's a personal license used only for the purpose of this
+    # test and will expire on 10-31-2024, after which date, another one can be requested. KX sends an email with the base64 encoded string version
+    # of the license.
+    # the installation of this license allows to test all the licensed features of kx
     - python -c "import base64, os; t = '<insert-license-here>'; t = t.encode('ascii'); decoded = base64.decodebytes(t); bf = open(os.path.join('q','kc.lic'), 'wb'); bf.write(decoded); bf.close()"
-    - pytest -v -k "not ({{ tests_to_skip }})" tests
+    # these are the tests where at least one test requires a kbd+ installations
+    - pytest -k "not ({{ tests_to_skip_test_toq }})" tests/test_toq.py
+    - pytest -k "not ({{ tests_to_skip_test_util }})" tests/test_util.py
+    - pytest -k "not ({{ tests_to_skip_test_ctx }})" tests/test_ctx.py
+    - pytest -k "not ({{ tests_to_skip_test_query }})" tests/test_query.py
+    - pytest -k "not ({{ tests_to_skip_test_wrappers }})" tests/test_wrappers.py
+    - pytest -k "not ({{ tests_to_skip_test_system }})" tests/test_system.py
+    - pytest -k "not ({{ tests_to_skip_test_console }})" tests/test_console.py
+    - pytest -k "not ({{ tests_to_skip_test_q_future }})" tests/test_q_future.py
+    - pytest -k "not ({{ tests_to_skip_test_write }})" tests/test_write.py
+    - pytest -k "not ({{ tests_to_skip_test_read }})" tests/test_read.py
+    - pytest -k "not ({{ tests_to_skip_test_q }})" tests/test_q.py
+    - pytest -k "not ({{ tests_to_skip_test_ipc }})" tests/test_ipc.py
+    - pytest -k "not ({{ tests_to_skip_test_config }})" tests/test_config.py
+    # these are all other tests
+    - pytest -k "not ({{ tests_to_skip }})" test/test_cast.py test/test_pandas_apply.py test/test_register.py test/test_sql.py test/test_cloud_edition.py test/test_license.py
+    - pytest -k "not ({{ tests_to_skip }})" test/test_pandas_set_index.py  test/test_q_foreign.py  test/test_random.py test/test_exceptions.py  test/test_pandas_api.py  test/test_pykx.py test/test_schema.py
   requires:
     - pip
     - plotly
