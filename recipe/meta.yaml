@@ -26,7 +26,9 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
-    - git  # [not osx]
+    - git       # [not win]
+    - patch     # [not win]
+    - m2-patch  # [win]
   host:
     - python
     - cython 3.0.0
@@ -140,3 +142,5 @@ about:
 extra:
   recipe-maintainers:
     - boldorider4
+  skip-lints:
+    - missing_imports_or_run_test_py
