@@ -26,6 +26,7 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - git  # [not osx]
   host:
     - python
     - cython 3.0.0
