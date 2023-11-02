@@ -110,12 +110,11 @@ test:
     - pytest
     - pytest-asyncio
     - pytest-benchmark
-    - pytest-monitor  # [not osx]
     - pytest-xdist
     - pytest-randomly
     - psutil
     - pytest-timeout
-    - pyarrow
+    - pyarrow         # [not s390x]
 
 about:
   home: https://code.kx.com/pykx
