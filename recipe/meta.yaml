@@ -75,6 +75,7 @@ test:
     - pytest-randomly
     - psutil
     - pytest-timeout
+    - pyarrow
 
 about:
   home: https://code.kx.com/pykx
