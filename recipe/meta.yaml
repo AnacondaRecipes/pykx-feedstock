@@ -10,6 +10,7 @@ source:
   git_rev: release/{{ version }}
   patches:
     - 0001-Addition-of-missing-file.patch
+    - 0002-remove-linker-flags.patch
 
 build:
   skip: True  # [osx or win]
