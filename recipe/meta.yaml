@@ -77,10 +77,6 @@ requirements:
 {% set tests_to_skip_test_ipc = "test_ipc_messaging_tcp_auth or test_async_deferred_calls or test_raw_await or test_memory_domain or test_ipc_messaging_tcp_compression_edge_case or test_no_pyfunc_over_ipc or test_raw_complex or test_tls_and_unix_error or test_ipc_messaging_unix or test_async_q_connection_clears_calls_on_close or test_raw_poll_send_recv_all or test_secure_q_con_callable or test_eventloop_gather_order or test_async_timeout or test_ipc_messaging_unix_auth or test_raw_poll_send_recv_one or test_async_q_connection or test_async_with_q_features or test_async_repr or test_no_pykx_namespace or test_async_helpful_error_for_closed_conn or test_max_error_length or test_no_wrap_over_ipc or test_uninitialized_connection or test_no_ctx_not_used or test_repr or test_raw_poll_send_recv_n or test_sync_helpful_error_for_closed_conn or test_ipc_messaging_tcp or test_timeout" %}
 {% set tests_to_skip_test_config = "test_QHOME" %}
 
-# timeout problems on osx
-{% set tests_to_skip_test_toq = tests_to_skip_test_toq + " or test_from_pandas_series_licensed" %}                                 # [osx and arm64]
-{% set tests_to_skip_test_util = tests_to_skip_test_util + " or test_dir or test_cached_property or test_debug_environment_ret" %} # [osx and arm64]
-
 test:
   source_files:
     - tests
