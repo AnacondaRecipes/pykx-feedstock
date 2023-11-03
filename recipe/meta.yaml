@@ -24,10 +24,10 @@ build:
     - rm -rv $SRC_DIR/src/pykx/lib/l64*      # [linux and aarch64]
     - del /s %SRC_DIR%/src/pykx/lib/l64 %SRC_DIR%/src/pykx/lib/l64arm %SRC_DIR%/src/pykx/lib/m64 %SRC_DIR%/src/pykx/lib/m64arm  # [win]
     - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+    # adding rpath and fixed needed SO path on pre-built libobjstor delivered from upstream for linux
+    - patchelf $SP_DIR/pykx/lib/l64/libobjstor.so --add-rpath '$ORIGIN'  # [linux]
+    - patchelf $SP_DIR/pykx/lib/l64/libobjstor.so --replace-needed '$ORIGIN/libkurl.so' libkurl.so  # [linux]
   number: 0
-  ignore_whitelist_dso:
-    - ld-linux-x86-64.so.2        # [s390x or ppcle64]
-    - "*libkurl.so"               # [s390x or ppcle64 or x86_64]
 
 requirements:
   build:
@@ -35,6 +35,7 @@ requirements:
     - git       # [not win]
     - patch     # [not win]
     - m2-patch  # [win]
+    - patchelf  # [linux]
   host:
     - python
     - cython 3.0.0
