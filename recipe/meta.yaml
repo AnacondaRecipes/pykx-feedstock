@@ -97,23 +97,23 @@ test:
     # of the license.
     # the installation of this license allows to test all the licensed features of kx
     - python -c "import base64, os; t = '<insert-license-here>'; t = t.encode('ascii'); decoded = base64.decodebytes(t); bf = open(os.path.join('q','kc.lic'), 'wb'); bf.write(decoded); bf.close()"
-    # these are the tests where at least one test requires a kbd+ installations
-    - pytest -n auto -k "not ({{ tests_to_skip_test_toq }})" tests/test_toq.py             # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_util }})" tests/test_util.py           # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_ctx }})" tests/test_ctx.py             # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_query }})" tests/test_query.py         # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_wrappers }})" tests/test_wrappers.py   # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_system }})" tests/test_system.py       # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_console }})" tests/test_console.py     # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_q_future }})" tests/test_q_future.py   # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_write }})" tests/test_write.py         # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_read }})" tests/test_read.py           # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_q }})" tests/test_q.py                 # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_ipc }})" tests/test_ipc.py             # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip_test_config }})" tests/test_config.py       # [not (osx and arm64)]
-    # these are all other tests
-    - pytest -n auto -k "not ({{ tests_to_skip }})" test/test_cast.py test/test_pandas_apply.py test/test_register.py test/test_sql.py test/test_cloud_edition.py test/test_license.py                                  # [not (osx and arm64)]
-    - pytest -n auto -k "not ({{ tests_to_skip }})" test/test_pandas_set_index.py  test/test_q_foreign.py  test/test_random.py test/test_exceptions.py  test/test_pandas_api.py  test/test_pykx.py test/test_schema.py  # [not (osx and arm64)]
+    # # these are the tests where at least one test requires a kbd+ installations
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_toq }})" tests/test_toq.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_util }})" tests/test_util.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_ctx }})" tests/test_ctx.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_query }})" tests/test_query.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_wrappers }})" tests/test_wrappers.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_system }})" tests/test_system.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_console }})" tests/test_console.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_q_future }})" tests/test_q_future.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_write }})" tests/test_write.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_read }})" tests/test_read.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_q }})" tests/test_q.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_ipc }})" tests/test_ipc.py
+    # - pytest -n auto -k "not ({{ tests_to_skip_test_config }})" tests/test_config.py
+    # # these are all other tests
+    # - pytest -n auto -k "not ({{ tests_to_skip }})" test/test_cast.py test/test_pandas_apply.py test/test_register.py test/test_sql.py test/test_cloud_edition.py test/test_license.py
+    # - pytest -n auto -k "not ({{ tests_to_skip }})" test/test_pandas_set_index.py  test/test_q_foreign.py  test/test_random.py test/test_exceptions.py  test/test_pandas_api.py  test/test_pykx.py test/test_schema.py
   requires:
     - pip
     - plotly
