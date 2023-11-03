@@ -27,6 +27,7 @@ build:
     # adding rpath and fixed needed SO path on pre-built libobjstor delivered from upstream for linux
     - patchelf $SP_DIR/pykx/lib/l64/libobjstor.so --add-rpath '$ORIGIN'  # [linux]
     - patchelf $SP_DIR/pykx/lib/l64/libobjstor.so --replace-needed '$ORIGIN/libkurl.so' libkurl.so  # [linux]
+    - objdump -x $SP_DIR/pykx/lib/l64/libobjstor.so  # [linux]
   number: 0
 
 requirements:
