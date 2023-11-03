@@ -13,7 +13,8 @@ source:
     - 0002-remove-linker-flags.patch
 
 build:
-  skip: True  # [osx or win]
+  # skipping s390x and ppc64le because kx does not support these with their pre-built binaries
+  skip: True  # [osx or win or s390x or ppc64le]
   script:
     - rm -rv $SRC_DIR/src/pykx/lib/[l,w]64*  # [osx]
     - rm -rv $SRC_DIR/src/pykx/lib/m64arm    # [osx and x86_64]
