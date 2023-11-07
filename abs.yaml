@@ -2,3 +2,5 @@ upload_channels:
   - sfe1ed40
 channels:
   - https://staging.continuum.io/prefect/fs/dlfcn-win32-feedstock/pr1/a7c26b9
+# the kx channel can be used to download kdb as a test dependency
+# - kx
