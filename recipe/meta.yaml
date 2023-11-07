@@ -14,29 +14,24 @@ source:
 
 build:
   # skipping s390x and ppc64le because kx does not support these with their pre-built binaries
-  skip: True  # [s390x or ppc64le or (not win)]
+  # skipping win because we don't want to redistribute msvsr100.dll which would be a run dependency
+  skip: True  # [s390x or ppc64le or win]
   script:
     - if [ -d $SRC_DIR/src/{{ name }}/lib/m64arm ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64arm; fi  # [(osx and x86_64) or linux]
     - if [ -d $SRC_DIR/src/{{ name }}/lib/m64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64; fi        # [(osx and arm64) or linux]
     - if [ -d $SRC_DIR/src/{{ name }}/lib/w64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/w64; fi        # [linux or osx]
     - if [ -d $SRC_DIR/src/{{ name }}/lib/l64arm ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/l64arm; fi  # [(linux and x86_64) or osx]
     - if [ -d $SRC_DIR/src/{{ name }}/lib/l64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/l64; fi        # [(linux and aarch64) or osx]
-    - del /q /s %SRC_DIR%\src\{{ name }}\lib\l64 %SRC_DIR%\src\{{ name }}\lib\l64arm %SRC_DIR%\src\{{ name }}\lib\m64 %SRC_DIR%\src\{{ name }}\lib\m64arm  # [win]
     - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
     # fixing needed SO path on pre-built libobjstor delivered from upstream for linux
     - patchelf $SP_DIR/{{ name }}/lib/l64/libobjstor.so --replace-needed '$ORIGIN/libkurl.so' python$PY_VER/site-packages/{{ name }}/lib/l64/libkurl.so # [linux and x86_64]
-    - set PATH=%SP_DIR%\{{ name }}\lib\w64;%PATH%  # [win]
-  missing_dso_whitelist:   # [win]
-    - $RPATH/MSVCR100.dll  # [win]
-    - $RPATH/q.dll         # [win]
   number: 0
 
 requirements:
   build:
     - {{ compiler('c') }}
-    - git       # [not win]
-    - patch     # [not win]
-    - m2-patch  # [win]
+    - git
+    - patch
     - patchelf  # [linux]
   host:
     - python
@@ -46,7 +41,6 @@ requirements:
     - setuptools
     - setuptools-scm 7.1.0
     - tomli 2.0.1
-    - dlfcn-win32 1.4.1  # [win]
     - wheel
     - pip
   run:
