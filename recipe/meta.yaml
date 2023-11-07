@@ -14,7 +14,7 @@ source:
 
 build:
   # skipping s390x and ppc64le because kx does not support these with their pre-built binaries
-  skip: True  # [s390x or ppc64le]
+  skip: True  # [s390x or ppc64le or (not win)]
   script:
     - if [ -d $SRC_DIR/src/{{ name }}/lib/m64arm ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64arm; fi  # [(osx and x86_64) or linux]
     - if [ -d $SRC_DIR/src/{{ name }}/lib/m64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64; fi        # [(osx and arm64) or linux]
@@ -42,6 +42,7 @@ requirements:
     - setuptools
     - setuptools-scm 7.1.0
     - tomli 2.0.1
+    - dlfcn-win32  # [win]
     - wheel
     - pip
   run:
