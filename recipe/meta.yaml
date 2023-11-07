@@ -14,7 +14,7 @@ source:
 
 build:
   # skipping s390x and ppc64le because kx does not support these with their pre-built binaries
-  skip: True  # [win or s390x or ppc64le]
+  skip: True  # [s390x or ppc64le]
   script:
     - if [ -d $SRC_DIR/src/{{ name }}/lib/m64arm ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64arm; fi  # [(osx and x86_64) or linux]
     - if [ -d $SRC_DIR/src/{{ name }}/lib/m64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64; fi        # [(osx and arm64) or linux]
@@ -24,7 +24,7 @@ build:
     - del /s %SRC_DIR%\src\{{ name }}\lib\l64 %SRC_DIR%\src\{{ name }}\lib\l64arm %SRC_DIR%\src\{{ name }}\lib\m64 %SRC_DIR%\src\{{ name }}\lib\m64arm  # [win]
     - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
     # fixing needed SO path on pre-built libobjstor delivered from upstream for linux
-    - patchelf $SP_DIR/{{ name }}/lib/l64/libobjstor.so --replace-needed '$ORIGIN/libkurl.so' python$PY_VER/site-packages/{{ name }}/lib/l64/libkurl.so        # [linux and x86_64]
+    - patchelf $SP_DIR/{{ name }}/lib/l64/libobjstor.so --replace-needed '$ORIGIN/libkurl.so' python$PY_VER/site-packages/{{ name }}/lib/l64/libkurl.so # [linux and x86_64]
   number: 0
 
 requirements:
