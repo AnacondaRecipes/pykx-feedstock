@@ -24,7 +24,7 @@ build:
     - rm -rv $SRC_DIR/src/{{ name }}/lib/l64       # [linux and aarch64]
     - del /s %SRC_DIR%/src/{{ name }}/lib/l64 %SRC_DIR%/src/{{ name }}/lib/l64arm %SRC_DIR%/src/{{ name }}/lib/m64 %SRC_DIR%/src/{{ name }}/lib/m64arm  # [win]
     - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-    # adding rpath and fixed needed SO path on pre-built libobjstor delivered from upstream for linux
+    # fixing needed SO path on pre-built libobjstor delivered from upstream for linux
     - patchelf $SP_DIR/{{ name }}/lib/l64/libobjstor.so --replace-needed '$ORIGIN/libkurl.so' python$PY_VER/site-packages/{{ name }}/lib/l64/libkurl.so        # [linux and x86_64]
     - patchelf $SP_DIR/{{ name }}/lib/l64arm/libobjstor.so --replace-needed '$ORIGIN/libkurl.so' python$PY_VER/site-packages/{{ name }}/lib/l64arm/libkurl.so  # [linux and aarch64]
   number: 0
@@ -85,6 +85,8 @@ test:
     - tests
   commands:
     - pip check
+    # classic import test fails without a license because of the disclaimer being printed out
+    # but calling it this way circumvents that
     - python -c "import pykx"
     - mkdir q                     # [not win]
     - mkdir q                     # [win]
@@ -97,7 +99,7 @@ test:
     # of the license.
     # the installation of this license allows to test all the licensed features of kx
     - python -c "import base64, os; t = '<insert-license-here>'; t = t.encode('ascii'); decoded = base64.decodebytes(t); bf = open(os.path.join('q','kc.lic'), 'wb'); bf.write(decoded); bf.close()"
-    # # these are the tests where at least one test requires a kbd+ installations
+    # these are the tests where at least one test requires a kbd+ installations
     # - pytest -n auto -k "not ({{ tests_to_skip_test_toq }})" tests/test_toq.py
     # - pytest -n auto -k "not ({{ tests_to_skip_test_util }})" tests/test_util.py
     # - pytest -n auto -k "not ({{ tests_to_skip_test_ctx }})" tests/test_ctx.py
