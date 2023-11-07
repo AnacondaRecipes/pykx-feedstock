@@ -25,8 +25,8 @@ build:
     - del /s %SRC_DIR%/src/{{ name }}/lib/l64 %SRC_DIR%/src/{{ name }}/lib/l64arm %SRC_DIR%/src/{{ name }}/lib/m64 %SRC_DIR%/src/{{ name }}/lib/m64arm  # [win]
     - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
     # adding rpath and fixed needed SO path on pre-built libobjstor delivered from upstream for linux
-    - patchelf $SP_DIR/pykx/lib/l64/libobjstor.so --add-rpath '$ORIGIN'                             # [linux and x86_64]
-    - patchelf $SP_DIR/pykx/lib/l64/libobjstor.so --replace-needed '$ORIGIN/libkurl.so' libkurl.so  # [linux and x86_64]
+    - patchelf $SP_DIR/{{ name }}/lib/l64/libobjstor.so --replace-needed '$ORIGIN/libkurl.so' python$PY_VER/site-packages/{{ name }}/lib/l64/libkurl.so        # [linux and x86_64]
+    - patchelf $SP_DIR/{{ name }}/lib/l64arm/libobjstor.so --replace-needed '$ORIGIN/libkurl.so' python$PY_VER/site-packages/{{ name }}/lib/l64arm/libkurl.so  # [linux and aarch64]
   number: 0
 
 requirements:
