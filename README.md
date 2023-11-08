@@ -10,7 +10,7 @@ analyze huge amounts of in-memory and on-disk time-series data.
 https://code.kx.com/pykx
 
 # Upstream license:
-LGPL-3.0 AND Apache-2.0
+Apache-2.0
 
 # Feedstock license:
 BSD-3
