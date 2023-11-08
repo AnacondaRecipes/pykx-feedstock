@@ -16,7 +16,7 @@ package:
 
 source:
   git_url: https://github.com/KxSystems/pykx
-  git_rev: release/{{ version }}
+  git_rev: 1cddd767d5a324b34020facb9be3569c6101e949 # corresponds to merge commit from release/2.1 to main
   patches:
     - 0001-Addition-of-missing-file.patch
     - 0002-remove-linker-flags.patch
