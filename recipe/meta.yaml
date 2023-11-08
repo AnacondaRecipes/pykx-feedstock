@@ -67,6 +67,10 @@ requirements:
     - pandas >=1.2
     - pytz >=2022.1
     - toml >=0.10.2,<0.11.0
+    # vs2010_runtime only necessary for win build: right now this package comes from free channel but it could be
+    # reditributed by Anaconda if we decided to support vs2010. Alternatively, if upstream project decided to link
+    # against a modern version visual C++ redist, the required dlls would be automatically included with vs20XX in
+    # build section
     - vs2010_runtime 10.00.40219.1  #[win]
     - {{ pin_compatible('numpy') }}
 
@@ -137,6 +141,7 @@ test:
     - pytest-timeout
     - pyarrow         # [not s390x]
 {% if kdb_is_installed %}
+    # kdb is only present on the anaconda.org/kx channel, but we could agree with kx to redistribute it
     - kdb
 {% endif %}
 
