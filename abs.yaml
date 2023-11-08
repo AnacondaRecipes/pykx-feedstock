@@ -1,8 +1,10 @@
 upload_channels:
   - sfe1ed40
-# in case a win build needs to be attempted
-channels:
-# the kx channel can be used to download kdb as a test dependency
-  - kx
-# the free channel can be used to download vs2010_runtime
-  - free
+# # in case a win build is attempted
+# channels:
+# # the kx channel can be used to download kdb as a test dependency
+# # for this channel to be used the switch install_kdb_as_test_dep needs to be enabled
+#   - kx
+# # the free channel can be used to download vs2010_runtime, which is a dependency for win-64
+# # for this channel to be used the switch win-support needs to be enabled
+#   - free
