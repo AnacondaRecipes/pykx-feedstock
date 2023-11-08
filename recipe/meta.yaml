@@ -4,11 +4,11 @@
 # needs investigation
 {% set upstream_tests_are_enabled = False %}
 # this switch should be enabled if a license can be used to run the tests below (see base64 license)
-# {% set kx_license_available = False %}
-# # this switch should be enabled if kdb can be downloaded as a test dependency
-# {% set install_kdb_as_test_dep = False %}
+{% set kx_license_available = False %}
+# this switch should be enabled if kdb can be downloaded as a test dependency
+{% set install_kdb_as_test_dep = False %}
 # # this switch enables experimental win-64 build depending on vs2010_runtime
-# {% set winbuild_enabled = False %}
+{% set winbuild_enabled = False %}
 
 package:
   name: {{ name|lower }}
@@ -25,13 +25,13 @@ build:
   # skipping s390x and ppc64le because kx does not support these with their pre-built binaries
   # skipping win because upstream q.dll and e.dll depend on an older MSVC runtime Anaconda no longer supports
   skip: True  # [s390x or ppc64le]
-#{% if not winbuild_enabled %}
+{% if not winbuild_enabled %}
   skip: True  # [win]
-#{% endif %}
-#{% if not kx_license_available %}
+{% endif %}
+{% if not kx_license_available %}
   script_env:
     - QARGS="--unlicensed"
-#{% endif %}
+{% endif %}
   script:
     # avoid distributing unnecessary shared objects depending on the platform
     - if [ -d $SRC_DIR/src/{{ name }}/lib/m64arm ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64arm; fi  # [(osx and x86_64) or linux]
@@ -39,20 +39,20 @@ build:
     - if [ -d $SRC_DIR/src/{{ name }}/lib/w64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/w64; fi        # [linux or osx]
     - if [ -d $SRC_DIR/src/{{ name }}/lib/l64arm ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/l64arm; fi  # [(linux and x86_64) or osx]
     - if [ -d $SRC_DIR/src/{{ name }}/lib/l64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/l64; fi        # [(linux and aarch64) or osx]
-# {% if winbuild_enabled %}
-#     - del /q /s %SRC_DIR%\src\{{ name }}\lib\l64 %SRC_DIR%\src\{{ name }}\lib\l64arm %SRC_DIR%\src\{{ name }}\lib\m64 %SRC_DIR%\src\{{ name }}\lib\m64arm  # [win]
-# {% endif %}
+{% if winbuild_enabled %}
+    - del /q /s %SRC_DIR%\src\{{ name }}\lib\l64 %SRC_DIR%\src\{{ name }}\lib\l64arm %SRC_DIR%\src\{{ name }}\lib\m64 %SRC_DIR%\src\{{ name }}\lib\m64arm  # [win]
+{% endif %}
     - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
     # fixing needed SO path on pre-built libobjstor delivered from upstream for linux
     - patchelf --replace-needed '$ORIGIN/libkurl.so' python$PY_VER/site-packages/{{ name }}/lib/l64/libkurl.so $SP_DIR/{{ name }}/lib/l64/libobjstor.so # [linux and x86_64]
-# {% if winbuild_enabled %}
-#     # set Path variable to resolve location of q.dll
-#     - set PATH=%SP_DIR%\{{ name }}\lib\w64;%PATH%  # [win]
-#   missing_dso_whitelist:   # [win]
-#   # both present in this package or vs2010_runtime but conda-build doens't find them
-#     - $RPATH/MSVCR100.dll  # [win]
-#     - $RPATH/q.dll         # [win]
-# {% endif %}
+{% if winbuild_enabled %}
+    # set Path variable to resolve location of q.dll
+    - set PATH=%SP_DIR%\{{ name }}\lib\w64;%PATH%  # [win]
+  missing_dso_whitelist:   # [win]
+  # both present in this package or vs2010_runtime but conda-build doens't find them
+    - $RPATH/MSVCR100.dll  # [win]
+    - $RPATH/q.dll         # [win]
+{% endif %}
   number: 0
 
 requirements:
@@ -60,9 +60,9 @@ requirements:
     - {{ compiler('c') }}
     - git       # [not win]
     - patch     # [not win]
-# {% winbuild_enabled %}
-#     - m2-patch  # [win]
-# {% endif %}
+{% if winbuild_enabled %}
+    - m2-patch  # [win]
+{% endif %}
     - patchelf  # [linux and x86_64]
   host:
     - python
@@ -72,9 +72,9 @@ requirements:
     - setuptools
     - setuptools-scm 7.1.0
     - tomli 2.0.1
-# {% winbuild_enabled %}
-#     - dlfcn-win32 1.4.1  # [win]
-# {% endif %}
+{% if winbuild_enabled %}
+    - dlfcn-win32 1.4.1  # [win]
+{% endif %}
     - wheel
     - pip
   run:
@@ -82,10 +82,10 @@ requirements:
     - pandas >=1.2
     - pytz >=2022.1
     - toml >=0.10.2,<0.11.0
-# {% winbuild_enabled %}
-#     # for the moment, this package comes from the free channel, which needs to be enabled in abs.yaml
-#     - vs2010_runtime 10.00.40219.1  #[win]
-# {% endif %}
+{% if winbuild_enabled %}
+    # for the moment, this package comes from the free channel, which needs to be enabled in abs.yaml
+    - vs2010_runtime 10.00.40219.1  #[win]
+{% endif %}
     - {{ pin_compatible('numpy') }}
 
 # skipping test version because regex in test is wrong
@@ -150,11 +150,11 @@ test:
     - psutil
     - pytest-timeout
     - pyarrow         # [not s390x]
-# {% if install_kdb_as_test_dep %}
-#     # kdb is only present on the anaconda.org/kx channel, hence the channel needs to be enabled in abs.yaml
-#     # in the future we may agree with kx to distribute this package ourselves.
-#     - kdb
-# {% endif %}
+{% if install_kdb_as_test_dep %}
+    # kdb is only present on the anaconda.org/kx channel, hence the channel needs to be enabled in abs.yaml
+    # in the future we may agree with kx to distribute this package ourselves.
+    - kdb
+{% endif %}
 
 about:
   home: https://code.kx.com/pykx
