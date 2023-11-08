@@ -23,6 +23,10 @@ build:
   # skipping s390x and ppc64le because kx does not support these with their pre-built binaries
   # skipping win because upstream q.dll and e.dll depend on an older MSVC runtime Anaconda no longer supports
   skip: True  # [s390x or ppc64le]
+{% if not pykx_is_licensed %}
+  script_env:
+    - QARGS="--unlicensed"
+{% endif %}
   script:
     - if [ -d $SRC_DIR/src/{{ name }}/lib/m64arm ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64arm; fi  # [(osx and x86_64) or linux]
     - if [ -d $SRC_DIR/src/{{ name }}/lib/m64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64; fi        # [(osx and arm64) or linux]
@@ -88,9 +92,10 @@ test:
     # of kx. Insert a base64 license and uncomment the line to enable such tests
     - python -c "import base64, os; t = '<insert-license-here>'; t = t.encode('ascii'); decoded = base64.decodebytes(t); bf = open(os.path.join('q','kc.lic'), 'wb'); bf.write(decoded); bf.close()"
     - export QLIC=q
-    - export ARGS="--licensed"
+    - export QARGS="--licensed"
 {% else %}
-    - if [ -f q/kc.lic ] then export QARGS="--unlicensed" && DISABLE_LICENSED=" or licensed"
+    - export QARGS="--unlicensed"
+    - export DISABLE_LICENSED=" or licensed"
 {% endif %}
     # these are the tests where at least one test requires a kbd+ installations
 {% if kdb_is_installed %}
