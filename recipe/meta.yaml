@@ -1,5 +1,12 @@
 {% set name = "pykx" %}
 {% set version = "2.1" %}
+# this switch disables all upstream test because of a time out issue on some platforms that still
+# needs investigation
+{% set upstream_tests_are_enabled = False %}
+# this switch should be enabled if a license can be used to run the tests below (see base64 license)
+{% set pykx_is_licensed = False %}
+# this switch should be enabled if kdb can be downloaded as a test dependency
+{% set kdb_is_installed = False %}
 
 package:
   name: {{ name|lower }}
@@ -49,15 +56,6 @@ requirements:
     - pytz >=2022.1
     - toml >=0.10.2,<0.11.0
     - {{ pin_compatible('numpy') }}
-
-# this switch disables all upstream test because of a time out issue on some platforms that still
-# needs investigation
-{% set upstream_tests_are_enabled = False %}
-# this switch should be enabled if a license can be used to run the tests below (see base64 license)
-{% set pykx_is_licensed = False %}
-# this switch should be enabled if kdb can be downloaded as a test dependency
-{% set kdb_is_installed = False %}
-
 
 # skipping test version because regex in test is wrong
 {% set tests_to_skip = "test_version" %}
