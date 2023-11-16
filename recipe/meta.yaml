@@ -28,10 +28,6 @@ build:
 {% if not winbuild_enabled %}
   skip: True  # [win]
 {% endif %}
-{% if not kx_license_available %}
-  script_env:
-    - QARGS="--unlicensed"
-{% endif %}
   script_env:
     - QLIC="/tmp"
   script:
