@@ -1,5 +1,5 @@
 {% set name = "pykx" %}
-{% set version = "2.1" %}
+{% set version = "2.2.0" %}
 # this switch disables all upstream test because of a time out issue on some platforms that still
 # needs investigation
 {% set upstream_tests_are_enabled = False %}
@@ -16,7 +16,7 @@ package:
 
 source:
   git_url: https://github.com/KxSystems/pykx
-  git_rev: 1cddd767d5a324b34020facb9be3569c6101e949 # corresponds to merge commit from release/2.1 to main
+  git_rev: {{ version }}
   patches:
     - 0001-Addition-of-missing-file.patch
     - 0002-remove-linker-flags.patch
