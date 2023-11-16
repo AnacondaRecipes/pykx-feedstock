@@ -132,7 +132,7 @@ about:
   home: https://code.kx.com/pykx
   license: Apache-2.0
   license_file: LICENSE.txt
-  license_family: Apache
+  license_family: Other
   summary: An interface between Python and q.
   description: |
     PyKX is a Python first interface to the worlds fastest time-series database kdb+ and it's underlying vector
