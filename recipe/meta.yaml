@@ -27,21 +27,6 @@ build:
 {% if not winbuild_enabled %}
   skip: True  # [win]
 {% endif %}
-  script_env:
-    - QLIC="/tmp"
-  script:
-    # avoid distributing unnecessary shared objects depending on the platform
-    - if [ -d $SRC_DIR/src/{{ name }}/lib/m64arm ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64arm; fi  # [(osx and x86_64) or linux]
-    - if [ -d $SRC_DIR/src/{{ name }}/lib/m64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/m64; fi        # [(osx and arm64) or linux]
-    - if [ -d $SRC_DIR/src/{{ name }}/lib/w64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/w64; fi        # [linux or osx]
-    - if [ -d $SRC_DIR/src/{{ name }}/lib/l64arm ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/l64arm; fi  # [(linux and x86_64) or osx]
-    - if [ -d $SRC_DIR/src/{{ name }}/lib/l64 ]; then rm -rv $SRC_DIR/src/{{ name }}/lib/l64; fi        # [(linux and aarch64) or osx]
-    - del /q /s %SRC_DIR%\src\{{ name }}\lib\l64 %SRC_DIR%\src\{{ name }}\lib\l64arm %SRC_DIR%\src\{{ name }}\lib\m64 %SRC_DIR%\src\{{ name }}\lib\m64arm  # [win]
-    - {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-    # fixing needed SO path on pre-built libobjstor delivered from upstream for linux
-    - patchelf --replace-needed '$ORIGIN/libkurl.so' python$PY_VER/site-packages/{{ name }}/lib/l64/libkurl.so $SP_DIR/{{ name }}/lib/l64/libobjstor.so # [linux and x86_64]
-    # set Path variable to resolve location of q.dll
-    - set PATH=%SP_DIR%\{{ name }}\lib\w64;%PATH%  # [win]
   missing_dso_whitelist:   # [win]
   # both present in this package or vs2010_runtime but conda-build doens't find them
     - $RPATH/MSVCR100.dll  # [win]
