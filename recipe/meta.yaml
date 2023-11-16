@@ -18,8 +18,7 @@ source:
   git_url: https://github.com/KxSystems/pykx
   git_rev: {{ version }}
   patches:
-    - 0001-Addition-of-missing-file.patch
-    - 0002-remove-linker-flags.patch
+    - 0001-remove-linker-flags.patch
 
 build:
   # skipping s390x and ppc64le because kx does not support these with their pre-built binaries
