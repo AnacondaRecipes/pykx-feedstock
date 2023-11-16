@@ -43,11 +43,3 @@ if [[ ${target_platform} == linux-64 ]]
 then
     patchelf --replace-needed '$ORIGIN/libkurl.so' python$PY_VER/site-packages/$PKG_NAME/lib/l64/libkurl.so $SP_DIR/$PKG_NAME/lib/l64/libobjstor.so
 fi
-
-# Copy the [de]activate scripts to $PREFIX/etc/conda/[de]activate.d.
-# This will allow them to be run on environment activation.
-for CHANGE in "activate" "deactivate"
-do
-    mkdir -p "${PREFIX}/etc/conda/${CHANGE}.d"
-    cp "${RECIPE_DIR}/${CHANGE}.sh" "${PREFIX}/etc/conda/${CHANGE}.d/${PKG_NAME}_${CHANGE}.sh"
-done
