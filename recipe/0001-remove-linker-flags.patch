@@ -1,0 +1,29 @@
+From 17f7d963f6d9717699c320f4b4ea5a2b47698eae Mon Sep 17 00:00:00 2001
+From: Jack Olivieri <jolivieri@anaconda.com>
+Date: Fri, 3 Nov 2023 20:34:47 +0100
+Subject: [PATCH] remove linker flags
+
+---
+ setup.py | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index 37c87c4..6837667 100755
+--- a/setup.py
++++ b/setup.py
+@@ -229,12 +229,6 @@ def ext(name: str,
+             }.get(system, ()),
+             *extra_compile_args
+         ],
+-        extra_link_args=[
+-            *{
+-                'Linux': ('-Wl,-rpath,$ORIGIN/lib/Linux',),
+-            }.get(system, ()),
+-            *extra_link_args
+-        ],
+         define_macros=[
+             # Prevents the use of deprecated Numpy C APIs
+             ('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION'),
+-- 
+2.39.3 (Apple Git-145)
+
