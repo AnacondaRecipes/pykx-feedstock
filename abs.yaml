@@ -1,6 +1,5 @@
 upload_channels:
   - sfe1ed40
-upload_without_merge: True
 # # in case a win build is attempted
 # channels:
 # # the kx channel can be used to download kdb as a test dependency
