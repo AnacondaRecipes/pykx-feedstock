@@ -12,13 +12,11 @@
 
 package:
   name: {{ name|lower }}
-  version: {{ version }}.rc1
+  version: {{ version }}
 
 source:
   git_url: https://github.com/KxSystems/pykx
   git_rev: {{ version }}
-  patches:
-    - 0001-remove-linker-flags.patch
 
 build:
   # skipping s390x and ppc64le because kx does not support these with their pre-built binaries
@@ -37,8 +35,6 @@ requirements:
   build:
     - {{ compiler('c') }}
     - git       # [not win]
-    - patch     # [not win]
-    - m2-patch  # [win]
     - patchelf  # [linux and x86_64]
   host:
     - python
@@ -130,7 +126,7 @@ test:
 
 about:
   home: https://code.kx.com/pykx
-  license: Apache-2.0
+  license: LicenseRef-Proprietary and Apache-2.0
   license_file: LICENSE.txt
   license_family: Other
   summary: An interface between Python and q.
