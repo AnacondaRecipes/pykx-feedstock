@@ -17,6 +17,8 @@ package:
 source:
   git_url: https://github.com/KxSystems/pykx
   git_rev: {{ version }}
+  patches:
+    - patches/0001-load_pyarrow_unsafe-always-true.patch
 
 build:
   # skipping s390x and ppc64le because kx does not support these with their pre-built binaries
@@ -36,6 +38,8 @@ requirements:
     - {{ compiler('c') }}
     - git       # [not win]
     - patchelf  # [linux and x86_64]
+    - patch     # [not win]
+    - m2-patch  # [win]
   host:
     - python
     - cython 3.0.0
@@ -71,6 +75,7 @@ test:
     # classic import test fails without a license because of the disclaimer being printed out
     # but calling it this way circumvents that
     - python -c "import pykx"
+    - python -c "import pykx._pyarrow"
 {% if upstream_tests_are_enabled %}
 {% if kx_license_available %}
     # This is a trick to get a kc.lic to be installed into the $QHOME directory. KX sends an email with the base64

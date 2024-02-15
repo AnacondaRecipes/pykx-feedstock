@@ -1,0 +1,28 @@
+From d4fce10d8dffc61c9cdcc6be10aed22f184f06d9 Mon Sep 17 00:00:00 2001
+From: Lorenzo Pirritano <lpirritano@anaconda.com>
+Date: Thu, 15 Feb 2024 09:19:39 -0600
+Subject: [PATCH] load_pyarrow_unsafe always true
+
+We want to be sure that our pyarrow is always used,
+to avoid usage of subprocess as alternative to that.
+
+---
+ src/pykx/config.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/pykx/config.py b/src/pykx/config.py
+index 63af5d1..3f7c9dd 100644
+--- a/src/pykx/config.py
++++ b/src/pykx/config.py
+@@ -245,7 +245,7 @@ use_q_lock = _get_config_value('PYKX_Q_LOCK', False)
+ skip_under_q = _is_enabled('SKIP_UNDERQ', '--skip-under-q') or _is_enabled('PYKX_SKIP_UNDERQ')
+ no_qce = _is_enabled('PYKX_NOQCE', '--no-qce')
+ beta_features = _is_enabled('PYKX_BETA_FEATURES', '--beta')
+-load_pyarrow_unsafe = _is_enabled('PYKX_LOAD_PYARROW_UNSAFE', '--load-pyarrow-unsafe')
++load_pyarrow_unsafe = True
+ 
+ pandas_2 = pd.__version__.split('.')[0] == '2'
+ disable_pandas_warning = _is_enabled('PYKX_DISABLE_PANDAS_WARNING')
+-- 
+2.39.1
+
