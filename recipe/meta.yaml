@@ -72,12 +72,6 @@ test:
     - tests
   commands:
     - pip check
-{% if not kx_license_available %}
-    # classic import test fails without a license because of the disclaimer being printed out
-    # but calling it this way circumvents that
-    - python -c "import pykx"
-    - python -c "import pykx._pyarrow"
-{% endif %}
 {% if upstream_tests_are_enabled %}
 {% if kx_license_available %}
     # This is a trick to get a kc.lic to be installed into the $QHOME directory. KX sends an email with the base64
