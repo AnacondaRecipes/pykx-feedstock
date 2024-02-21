@@ -43,7 +43,8 @@ requirements:
   host:
     - python
     - cython 3.0.0
-    - numpy 1.22  # [py!=37]
+    - numpy 1.23  # [py>=311]
+    - numpy 1.22  # [py!=37 and py<311]
     - numpy 1.20  # [py==37]
     - setuptools
     - setuptools-scm 7.1.0
