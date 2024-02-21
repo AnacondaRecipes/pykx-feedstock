@@ -1,5 +1,5 @@
 {% set name = "pykx" %}
-{% set version = "2.2.0" %}
+{% set version = "2.3.2" %}
 # this switch disables all upstream test because of a time out issue on some platforms that still
 # needs investigation
 {% set upstream_tests_are_enabled = False %}
@@ -17,6 +17,8 @@ package:
 source:
   git_url: https://github.com/KxSystems/pykx
   git_rev: {{ version }}
+  patches:
+    - patches/0001-load_pyarrow_unsafe-always-true.patch
 
 build:
   # skipping s390x and ppc64le because kx does not support these with their pre-built binaries
@@ -36,10 +38,13 @@ requirements:
     - {{ compiler('c') }}
     - git       # [not win]
     - patchelf  # [linux and x86_64]
+    - patch     # [not win]
+    - m2-patch  # [win]
   host:
     - python
     - cython 3.0.0
-    - numpy 1.22  # [py!=37]
+    - numpy 1.23  # [py>=311]
+    - numpy 1.22  # [py!=37 and py<311]
     - numpy 1.20  # [py==37]
     - setuptools
     - setuptools-scm 7.1.0
@@ -49,7 +54,7 @@ requirements:
     - pip
   run:
     - python
-    - pandas >=1.2
+    - pandas >=1.2,<2.2.0
     - pytz >=2022.1
     - toml >=0.10.2
     # for the moment, this package comes from the free channel, which needs to be enabled in abs.yaml
@@ -68,18 +73,25 @@ test:
     - tests
   commands:
     - pip check
-    # classic import test fails without a license because of the disclaimer being printed out
-    # but calling it this way circumvents that
-    - python -c "import pykx"
 {% if upstream_tests_are_enabled %}
 {% if kx_license_available %}
     # This is a trick to get a kc.lic to be installed into the $QHOME directory. KX sends an email with the base64
-    # encoded string version of the license, after requesting a license at https://kx.com/kdb-personal-edition-download.
+    # encoded string version of the license, after requesting a license at https://kx.com/kdb-insights-personal-edition-license-download/.
     # The installation of this license allows to test all the licensed features of kx. Insert a base64 license and
     # uncomment the line to enable such tests
-    - python -c "import base64, os; t = '<insert-license-here>'; t = t.encode('ascii'); decoded = base64.decodebytes(t); bf = open(os.path.join('q','kc.lic'), 'wb'); bf.write(decoded); bf.close()"
+    {% set license_base64_encoded = "<insert license here>" %}
+    - python -c "import base64, os; t = '{{ license_base64_encoded }}'; t = t.encode('ascii'); decoded = base64.decodebytes(t); os.mkdir('q'); bf = open(os.path.join('q','kc.lic'), 'wb'); bf.write(decoded); bf.close()"
+    # As first thing in conftest.py there is a backup of the env var QHOME
+    # if not set, at least empty, it will exit with error
+    - export QHOME=
+    - export PYKX_IGNORE_QHOME=1
+    # This sets the folder path where the kc.lic file just created above are to be searched by pykx
     - export QLIC=q
     - export QARGS="--licensed"
+    {% set skip_unlicensed = "-m 'not unlicensed'" %}
+    # If the license is properly installed, these two imports should succeed
+    - python -c "import pykx"
+    - python -c "import pykx._pyarrow"
 {% else %}
     - export QARGS="--unlicensed"
     - export DISABLE_LICENSED=" or licensed"
@@ -90,7 +102,7 @@ test:
 {% else %}
     # with kdb unavailable, the following many tests need to be disabled
     - pytest -n auto -k "not ({{ tests_to_skip }} $DISABLE_LICENSED or test_from_callable or test_from_arrow_licensed)" tests/test_toq.py
-    - pytest -n auto -k "not ({{ tests_to_skip }} $DISABLE_LICENSED or test_pickle_pykx_df_block_manager)" tests/test_util.py
+    - pytest -n auto -k "not ({{ tests_to_skip }} $DISABLE_LICENSED or test_pickle_pykx_df_block_manager or test_dir or test_cached_property or test_normalize_to_bytes)" tests/test_util.py
     - pytest -n auto -k "not ({{ tests_to_skip }} $DISABLE_LICENSED or test_dot_q_errors or test_paths or test_update_global_context or test_dir or test_iter or test_reserved_words or test_ctx_no_overwrite_qerror or test_fqn or test_update_context or test_repr or test_with_block_errors_over_ipc or test_expunge or test_del or test_dot_z or test_dot_z)" tests/test_ctx.py
     - pytest -n auto -k "not ({{ tests_to_skip }} $DISABLE_LICENSED or test_upsert_match_schema or test_update or test_query_pa or test_delete or test_delete_async or test_update_async or test_insert_match_schema or test_select_async or test_exec_async or test_select or test_exec)" tests/test_query.py
     - pytest -n auto -k "not ({{ tests_to_skip }} $DISABLE_LICENSED or test_t_property or test_is_atom or test_hash or test_pickling or test_t_attr or test_call_unlicensed or test_symbolic_function)" tests/test_wrappers.py
@@ -112,7 +124,6 @@ test:
     - plotly
     - pytest
     - pytest-asyncio
-    - pytest-benchmark
     - pytest-xdist
     - pytest-randomly
     - psutil
